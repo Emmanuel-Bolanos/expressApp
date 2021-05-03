@@ -8,13 +8,14 @@ A client wants a web page, and you're going to be on the backend team. The gener
 
 Interpretation:
 
-1. CREATE books: body requires: title, author, year and tags. Return a GUID for new books. If the book already exists (same title, author, year), dont allow the duplicate.
-2. Fetching books: by GUID or by parameters (title, author, year or tag).
-3. UPDATE books: update book information.
-4. DELETE books: delete current books.
-5. title and author must be strings.
-6. year must be larger than 1454.
-7. tags must be an array with strings.
+- [ ] GET books: by GUID or by parameters (title, author, year or tag).
+  - [X] Extra: View all books
+- [ ] POST books: body requires: title, author, year and tags. Return a GUID for new books. If the book already exists (same title, author, year), dont allow the duplicate.
+- [ ] UPDATE books: update book information.
+- [ ] DELETE books: delete current books.
+- [ ] title and author must be strings.
+- [ ] year must be larger than 1454.
+- [ ] tags must be an array with strings.
 
 Additional requirements:
 
