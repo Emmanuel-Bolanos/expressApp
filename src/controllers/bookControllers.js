@@ -32,6 +32,25 @@ const createBook = (req, res) => {
   });
 };
 
+const updateBook = (req, res) => {
+  const { params: { guid }, body } = req;
+
+  Book.getAll((books) => {
+    const selectedBook = books.find((book) => book.guid === guid);
+
+    if (selectedBook) {
+      Object.assign(selectedBook, body);
+      Book.update(books);
+      return res.status(200).send({
+        message: 'book updated successfully',
+      });
+    }
+    return res.status(404).send({
+      message: 'book not found',
+    });
+  });
+};
+
 const deleteBook = (req, res) => {
   const { guid } = req.params;
   Book.getAll((books) => {
@@ -52,7 +71,8 @@ const deleteBook = (req, res) => {
 
 module.exports = {
   getAll,
-  createBook,
-  deleteBook,
   getByGuid,
+  createBook,
+  updateBook,
+  deleteBook,
 };
