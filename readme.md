@@ -9,11 +9,11 @@ A client wants a web page, and you're going to be on the backend team. The gener
 Interpretation:
 
 - [X] GET all books
-  - [ ] GET by GUID
+  - [X] GET by GUID
   - [ ] GET by parameters (title, author, year or tag)
 - [X] POST books
   - [ ] body requires: title, author, year and tags. If the book already exists (same title, author & year), dont allow the duplicate.
-  - [ ] Return a GUID for new books. 
+  - [X] Return a GUID for new books.
 - [ ] UPDATE specific book.
 - [ ] DELETE specific book.
 - [ ] Validations:
