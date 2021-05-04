@@ -10,7 +10,7 @@ Interpretation:
 
 - [X] GET all books
   - [X] GET by GUID
-  - [ ] GET by parameters (title, author, year or tag)
+  - [X] GET by parameters (title, author, year or tag)
 - [X] POST books
   - [ ] body requires: title, author, year and tags. If the book already exists (same title, author & year), dont allow the duplicate.
   - [X] Return a GUID for new books.
