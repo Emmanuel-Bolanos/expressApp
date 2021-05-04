@@ -8,18 +8,22 @@ A client wants a web page, and you're going to be on the backend team. The gener
 
 Interpretation:
 
-- [ ] GET books: by GUID or by parameters (title, author, year or tag).
-  - [X] Extra: View all books
-- [ ] POST books: body requires: title, author, year and tags. Return a GUID for new books. If the book already exists (same title, author, year), dont allow the duplicate.
-- [ ] UPDATE books: update book information.
-- [ ] DELETE books: delete current books.
-- [ ] title and author must be strings.
-- [ ] year must be larger than 1454.
-- [ ] tags must be an array with strings.
+- [X] GET all books
+  - [ ] GET by GUID
+  - [ ] GET by parameters (title, author, year or tag)
+- [X] POST books
+  - [ ] body requires: title, author, year and tags. If the book already exists (same title, author & year), dont allow the duplicate.
+  - [ ] Return a GUID for new books. 
+- [ ] UPDATE specific book.
+- [ ] DELETE specific book.
+- [ ] Validations:
+  - [ ] title and author must be strings.
+  - [ ] year must be larger than 1454.
+  - [ ] tags must be an array with strings.
 
 Additional requirements:
 
-1. Use port 5000 and domain /books
-2. Your API should be able to start with the command "npm run dev"
-3. Use MVC Model
-4. Use a middleware for input data validations
+- [X] Use port 5000 and domain /books
+- [X] Your API should be able to start with the command "npm run dev"
+- [X] Use MVC Model
+- [ ] Use a middleware for input data validations
