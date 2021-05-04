@@ -25,15 +25,29 @@ const createBook = (req, res) => {
   const newBook = new Book(body);
 
   newBook.save();
+
   res.status(201).send({
     message: 'New book created successfully',
-    guid: newBook.guid,
+    guid: newBook.getGuid(),
   });
 };
 
 const deleteBook = (req, res) => {
-  console.log(req.params);
-  res.send('done');
+  const { guid } = req.params;
+  Book.getAll((books) => {
+    const bookIdx = books.findIndex((book) => book.guid === guid);
+
+    if (bookIdx !== -1) {
+      books.splice(bookIdx, 1);
+      Book.update(books);
+      return res.status(200).send({
+        message: 'book deleted successfully',
+      });
+    }
+    return res.status(404).send({
+      message: 'book not found',
+    });
+  });
 };
 
 module.exports = {

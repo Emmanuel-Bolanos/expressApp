@@ -13,6 +13,10 @@ module.exports = class User {
     this.guid = nanoid();
   }
 
+  getGuid() {
+    return this.guid;
+  }
+
   save() {
     fs.readFile(p, (err, data) => {
       let books = [];
@@ -22,6 +26,10 @@ module.exports = class User {
       books.push(this);
       fs.writeFile(p, JSON.stringify(books), (error) => console.log(error));
     });
+  }
+
+  static update(books) {
+    fs.writeFile(p, JSON.stringify(books), (error) => console.log(error));
   }
 
   static getAll(cb) {

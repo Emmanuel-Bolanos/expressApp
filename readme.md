@@ -15,7 +15,7 @@ Interpretation:
   - [ ] body requires: title, author, year and tags. If the book already exists (same title, author & year), dont allow the duplicate.
   - [X] Return a GUID for new books.
 - [ ] UPDATE specific book.
-- [ ] DELETE specific book.
+- [X] DELETE specific book.
 - [ ] Validations:
   - [ ] title and author must be strings.
   - [ ] year must be larger than 1454.
