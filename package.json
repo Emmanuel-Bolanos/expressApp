@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "express": "^4.17.1",
+    "express-validator": "^6.10.1",
     "nanoid": "^3.1.22"
   }
 }

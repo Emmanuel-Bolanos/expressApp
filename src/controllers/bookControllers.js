@@ -36,10 +36,12 @@ const getAll = (req, res) => {
 };
 
 const getByGuid = (req, res) => {
+  // read query parameter
   const { guid } = req.params;
   Book.getAll((books) => {
+    // match query with existing guid
     const selectedBook = books.find((book) => book.guid === guid);
-
+    // return success if found, else send a 404
     if (selectedBook) {
       return res.status(200).send(selectedBook);
     }
@@ -50,8 +52,8 @@ const getByGuid = (req, res) => {
 };
 
 const createBook = (req, res) => {
-  const { body } = req;
-  const newBook = new Book(body);
+  const data = req.body;
+  const newBook = new Book(data);
 
   newBook.save();
 
@@ -62,13 +64,14 @@ const createBook = (req, res) => {
 };
 
 const updateBook = (req, res) => {
-  const { params: { guid }, body } = req;
+  const { guid } = req.params;
+  const data = req.body;
 
   Book.getAll((books) => {
     const selectedBook = books.find((book) => book.guid === guid);
 
     if (selectedBook) {
-      Object.assign(selectedBook, body);
+      Object.assign(selectedBook, data);
       Book.update(books);
       return res.status(200).send({
         message: 'book updated successfully',
@@ -81,10 +84,13 @@ const updateBook = (req, res) => {
 };
 
 const deleteBook = (req, res) => {
+  // read the query parameter
   const { guid } = req.params;
   Book.getAll((books) => {
+    // search for guid in db
     const bookIdx = books.findIndex((book) => book.guid === guid);
-
+    // if found, delete element and notify client
+    // else do nothing and return a 404
     if (bookIdx !== -1) {
       books.splice(bookIdx, 1);
       Book.update(books);
