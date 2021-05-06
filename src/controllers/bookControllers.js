@@ -96,19 +96,40 @@ const updateBook = async (req, res) => {
 
   try {
     const bookCollection = await Book.getAll();
-    const selectedBook = bookCollection.find((book) => book.guid === guid);
+    const updatedBooks = JSON.parse(JSON.stringify(bookCollection));
+    const selectedBook = updatedBooks.find((book) => book.guid === guid);
 
     if (selectedBook) {
       if (data.year) data.year = Number(data.year);
       // Make sure that at least one change was made
-      if (Object.entries(data).every((props) => props[1] === selectedBook[props[0]])) {
+      if (Object.entries(data).every((props) => {
+        if (props[0] === 'tags') return props[1].every((tag) => selectedBook[props[0]].includes(tag)) && props[1].length === selectedBook[props[0]].length;
+        return props[1] === selectedBook[props[0]];
+      })) {
         return res.status(409).send({
           message: 'The information is identical! At least one change must be made to update',
         });
       }
-
+      // Update the book info
       Object.assign(selectedBook, data);
-      await Book.update(bookCollection);
+
+      // Make sure that the change does not create a duplicate!
+      if (bookCollection.some((book) => {
+        const bookProps = Object.entries(book).slice(0, 4);
+        return bookProps.every((prop) => {
+          if (prop[0] === 'tags') {
+            return prop[1].every((tag) => selectedBook[prop[0]].includes(tag))
+            && prop[1].length === selectedBook[prop[0]].length;
+          }
+          return prop[1] === selectedBook[prop[0]];
+        });
+      })) {
+        return res.status(409).send({
+          message: 'The book already exists! Do not duplicate books, please',
+        });
+      }
+      // Make the changes
+      await Book.update(updatedBooks);
       return res.status(200).send({
         message: 'book updated successfully',
       });
@@ -117,6 +138,7 @@ const updateBook = async (req, res) => {
       message: 'book not found',
     });
   } catch (error) {
+    console.log(error);
     return res.status(500).send({
       message: 'Internal Server Error, please try again later',
     });

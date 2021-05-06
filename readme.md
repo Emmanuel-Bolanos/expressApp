@@ -45,6 +45,6 @@ You can be more specific and include more parameters, for example: http://localh
 
 To create a new book send a POST request to http://localhost:5000/books and include the book data on the body. If the validation rules are not followed, a corresponding error will be returned. Furthermore, attempting to duplicate an existing book will result in a 409 status code and a notification to the user to let him know that duplicates are not allowed.
 
-
+To update information in a book use a PUT request with the GUID of the book you want to modify: http://localhost:5000/books/jL_DJvZy6rlOQtMsgusv5 . To make an update you must change at least 1 value. If the change creates a duplicate of any book in the db, an error will be send to the user.
 
 Delete a book with a DELETE request to http://localhost:5000/books/:GUID . If the GUID is not found a 404 code is returned.
