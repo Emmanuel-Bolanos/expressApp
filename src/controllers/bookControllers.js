@@ -1,8 +1,8 @@
 const { Book } = require('../models');
 
-const getAll = (req, res) => {
-  Book.getAll((books) => {
-    let bookCollection = books;
+const getAll = async (req, res) => {
+  try {
+    let bookCollection = await Book.getAll();
 
     if (Object.keys(req.query).length > 0) {
       // Store the queries into an array
@@ -16,31 +16,35 @@ const getAll = (req, res) => {
         return { key: k, value: v.toLowerCase() };
       });
 
-      bookCollection = books
-        .filter((book) => filters.every((element) => {
-          // filter numbers
-          // eslint-disable-next-line no-restricted-globals
-          if (!isNaN(book[element.key])) return book[element.key] === element.value;
-          // filter tags
-          if (Array.isArray(book[element.key])) {
-            const tags = book[element.key].map((str) => str.toLowerCase());
-            return element.value.every((requestTag) => tags.includes(requestTag));
-          }
-          // filter normal strings
-          return book[element.key].toLowerCase() === element.value;
-        }));
+      bookCollection = bookCollection.filter((book) => filters.every((element) => {
+        // filter numbers
+        // eslint-disable-next-line no-restricted-globals
+        if (!isNaN(book[element.key])) return book[element.key] === element.value;
+        // filter tags
+        if (Array.isArray(book[element.key])) {
+          const tags = book[element.key].map((str) => str.toLowerCase());
+          return element.value.every((requestTag) => tags.includes(requestTag));
+        }
+        // filter normal strings
+        return book[element.key].toLowerCase() === element.value;
+      }));
     }
 
-    res.status(200).send(bookCollection);
-  });
+    return res.status(200).send(bookCollection);
+  } catch (error) {
+    return res.status(500).send({
+      message: 'Internal Server Error, please try again later',
+    });
+  }
 };
 
-const getByGuid = (req, res) => {
+const getByGuid = async (req, res) => {
   // read query parameter
   const { guid } = req.params;
-  Book.getAll((books) => {
+  try {
+    const bookCollection = await Book.getAll();
     // match query with existing guid
-    const selectedBook = books.find((book) => book.guid === guid);
+    const selectedBook = bookCollection.find((book) => book.guid === guid);
     // return success if found, else send a 404
     if (selectedBook) {
       return res.status(200).send(selectedBook);
@@ -48,31 +52,53 @@ const getByGuid = (req, res) => {
     return res.status(404).send({
       message: 'book not found',
     });
-  });
+  } catch (error) {
+    return res.status(500).send({
+      message: 'Internal Server Error, please try again later',
+    });
+  }
 };
 
-const createBook = (req, res) => {
+const createBook = async (req, res) => {
   const data = req.body;
   const newBook = new Book(data);
 
-  newBook.save();
+  try {
+    const bookCollection = await Book.getAll();
 
-  res.status(201).send({
-    message: 'New book created successfully',
-    guid: newBook.getGuid(),
-  });
+    // Check that the usr book is not on the db
+    if (bookCollection.some((book) => {
+      const bookProps = Object.entries(book).slice(0, 3);
+      return bookProps.every((prop) => prop[1] === newBook[prop[0]]);
+    })) {
+      return res.status(409).send({
+        message: 'The book already exists! Do not duplicate books, please',
+      });
+    }
+    // save the book
+    await newBook.save();
+    return res.status(201).send({
+      message: 'New book created successfully',
+      guid: newBook.getGuid(),
+    });
+  } catch (err) {
+    return res.status(500).send({
+      message: 'Internal Server Error, please try again later',
+    });
+  }
 };
 
-const updateBook = (req, res) => {
+const updateBook = async (req, res) => {
   const { guid } = req.params;
   const data = req.body;
 
-  Book.getAll((books) => {
-    const selectedBook = books.find((book) => book.guid === guid);
+  try {
+    const bookCollection = await Book.getAll();
+    const selectedBook = bookCollection.find((book) => book.guid === guid);
 
     if (selectedBook) {
       Object.assign(selectedBook, data);
-      Book.update(books);
+      await Book.update(bookCollection);
       return res.status(200).send({
         message: 'book updated successfully',
       });
@@ -80,28 +106,38 @@ const updateBook = (req, res) => {
     return res.status(404).send({
       message: 'book not found',
     });
-  });
+  } catch (error) {
+    return res.status(500).send({
+      message: 'Internal Server Error, please try again later',
+    });
+  }
 };
 
-const deleteBook = (req, res) => {
+const deleteBook = async (req, res) => {
   // read the query parameter
   const { guid } = req.params;
-  Book.getAll((books) => {
+
+  try {
+    const bookCollection = await Book.getAll();
     // search for guid in db
-    const bookIdx = books.findIndex((book) => book.guid === guid);
+    const bookIdx = bookCollection.findIndex((book) => book.guid === guid);
     // if found, delete element and notify client
-    // else do nothing and return a 404
     if (bookIdx !== -1) {
-      books.splice(bookIdx, 1);
-      Book.update(books);
+      bookCollection.splice(bookIdx, 1);
+      Book.update(bookCollection);
       return res.status(200).send({
         message: 'book deleted successfully',
       });
     }
+    // else do nothing and return a 404
     return res.status(404).send({
       message: 'book not found',
     });
-  });
+  } catch (error) {
+    return res.status(500).send({
+      message: 'Internal Server Error, please try again later',
+    });
+  }
 };
 
 module.exports = {

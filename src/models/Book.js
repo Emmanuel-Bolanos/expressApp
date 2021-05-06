@@ -1,4 +1,5 @@
-const fs = require('fs');
+/* eslint-disable no-shadow */
+const fs = require('fs').promises;
 const path = require('path');
 const { nanoid } = require('nanoid');
 
@@ -17,28 +18,20 @@ module.exports = class User {
     return this.guid;
   }
 
-  save() {
-    fs.readFile(p, (err, data) => {
-      let books = [];
-      if (!err) {
-        books = JSON.parse(data);
-      }
-      books.push(this);
-      fs.writeFile(p, JSON.stringify(books), (error) => console.log(error));
-    });
+  async save() {
+    const content = await fs.readFile(p);
+    let books = [];
+    books = JSON.parse(content);
+    books.push(this);
+    await fs.writeFile(p, JSON.stringify(books));
   }
 
-  static update(books) {
-    fs.writeFile(p, JSON.stringify(books), (error) => console.log(error));
+  static async update(books) {
+    await fs.writeFile(p, JSON.stringify(books));
   }
 
-  static getAll(cb) {
-    fs.readFile(p, (err, data) => {
-      let books = [];
-      if (!err) {
-        books = JSON.parse(data);
-      }
-      cb(books);
-    });
+  static async getAll() {
+    const content = await fs.readFile(p);
+    return JSON.parse(content);
   }
 };
