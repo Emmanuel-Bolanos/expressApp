@@ -16,11 +16,11 @@ Interpretation:
   - [X] Return a GUID for new books.
 - [X] UPDATE specific book.
 - [X] DELETE specific book.
-- [ ] Validations:
+- [X] Validations:
   - [X] new books require: title, author, year and tags.
   - [X] title and author must be strings.
   - [X] year must be larger than 1454.
-  - [ ] tags must be an array with strings.
+  - [X] tags must be an array with strings.
 
 Additional requirements:
 

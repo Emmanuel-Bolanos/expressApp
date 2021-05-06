@@ -31,8 +31,9 @@ const createBook = [
   check('tags')
     .exists().withMessage('Tags can not be empty!')
     .bail()
-    .isArray({ min: 1 }),
-
+    .isArray({ min: 1 })
+    .custom((arr) => arr.every((tag) => typeof tag === 'string'))
+    .withMessage('tag must be an array of strings!'),
   (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) return res.status(400).json(errors);
@@ -74,7 +75,9 @@ const updateBook = [
       check('tags')
         .exists()
         .bail()
-        .isArray({ min: 1 }),
+        .isArray({ min: 1 })
+        .custom((arr) => arr.every((tag) => typeof tag === 'string'))
+        .withMessage('tag must be an array of strings!'),
     ],
   ], 'Input at least one parameter!'),
 

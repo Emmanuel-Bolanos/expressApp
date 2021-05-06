@@ -23,7 +23,9 @@ const getAll = async (req, res) => {
         // filter tags
         if (Array.isArray(book[element.key])) {
           const tags = book[element.key].map((str) => str.toLowerCase());
-          return element.value.every((requestTag) => tags.includes(requestTag));
+          return Array.isArray(element.value)
+            ? (element.value).some((requestTag) => tags.includes(requestTag))
+            : tags.includes(element.value);
         }
         // filter normal strings
         return book[element.key].toLowerCase() === element.value;

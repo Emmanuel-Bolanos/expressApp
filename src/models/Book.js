@@ -9,7 +9,7 @@ module.exports = class User {
   constructor(data) {
     this.title = data.title;
     this.author = data.author;
-    this.year = data.year;
+    this.year = Number(data.year);
     this.tags = data.tags;
     this.guid = nanoid();
   }
