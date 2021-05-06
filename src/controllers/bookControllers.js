@@ -99,6 +99,14 @@ const updateBook = async (req, res) => {
     const selectedBook = bookCollection.find((book) => book.guid === guid);
 
     if (selectedBook) {
+      if (data.year) data.year = Number(data.year);
+      // Make sure that at least one change was made
+      if (Object.entries(data).every((props) => props[1] === selectedBook[props[0]])) {
+        return res.status(409).send({
+          message: 'The information is identical! At least one change must be made to update',
+        });
+      }
+
       Object.assign(selectedBook, data);
       await Book.update(bookCollection);
       return res.status(200).send({

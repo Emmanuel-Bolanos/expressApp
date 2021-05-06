@@ -32,3 +32,19 @@ Additional requirements:
 Extra:
 
 - [X] Async/await implementation with Internal server error handling
+
+# How to use it
+
+Get all the books in the books.json file in data with a GET request to /books from the port 5000 of the localhost
+
+You can use any of the GUID shown to query an specific book. For example, you can send a GET to: http://localhost:5000/books/jL_DJvZy6rlOQtMsgusv5 and in the original db this would return the book "Summer 2084" and all its information.
+
+You can also search books by parameters. If you would like to see all the books that include the tag of "horror", you could send a GET to: http://localhost:5000/books?tags=horror
+
+You can be more specific and include more parameters, for example: http://localhost:5000/books?author=James+Jameson&year=2020&tags=horror is a valid GET request and would return the book "The Triple Terror"
+
+To create a new book send a POST request to http://localhost:5000/books and include the book data on the body. If the validation rules are not followed, a corresponding error will be returned. Furthermore, attempting to duplicate an existing book will result in a 409 status code and a notification to the user to let him know that duplicates are not allowed.
+
+
+
+Delete a book with a DELETE request to http://localhost:5000/books/:GUID . If the GUID is not found a 404 code is returned.
