@@ -23,7 +23,7 @@ const createBook = [
     .withMessage('Year must be a number!')
     .bail()
     .custom((value) => {
-      const minYear = 1454;
+      const minYear = 1455;
       const currentYear = new Date().getFullYear();
       if (value > currentYear || value < minYear) throw new Error('Year must be greater than 1454 and not from the future!');
       return true;
@@ -64,7 +64,7 @@ const updateBook = [
         .isNumeric()
         .bail()
         .custom((value) => {
-          const minYear = 1454;
+          const minYear = 1455;
           const currentYear = new Date().getFullYear();
 
           if (value > currentYear || value < minYear) throw new Error('Year must be greater than 1454 and not from the future!');
